@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doc;
 use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\RedirectResponse;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -57,7 +60,8 @@ class UserController extends Controller
     public function dashboard(): View
     {
         if (auth()->check()) {
-            return view('dashboard');
+            $uploadedDocs = Doc::query()->where('user_id', '=', auth()->user()->id)->get();
+            return view('dashboard', ['docs' => $uploadedDocs]);
         } else {
             return view('login');
         }
@@ -67,6 +71,30 @@ class UserController extends Controller
     {
         auth()->logout();
         return redirect('/login')->with('success', 'You are now signed out');
+    }
+
+    public function storeAvatar(Request $request)
+    {
+        $request->validate([
+            'receipt' => ['required', 'image', 'max:1000']
+        ]);
+
+        // $request->file('receipt')->store('public/docs');
+
+        $user = auth()->user();
+
+        $filename = $user->id . '_' . uniqid() . '.jpg';
+
+        $imgData = Image::make($request->file('receipt'))->fit(120)->encode('jpg');
+
+        Storage::put('public/docs/'. $filename, $imgData);
+
+        Doc::create([
+            'user_id' => $user->id,
+            'path' => 'docs/' . $filename
+        ]);
+
+        return redirect()->back()->with('success', 'File Uploaded Sucessfully');
     }
 
 }

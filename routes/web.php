@@ -24,4 +24,6 @@ Route::post('/signin', [UserController::class, 'signin']);
 
 Route::get('/dashboard', [UserController::class, 'dashboard'])->middleware('auth');
 
-Route::post('/logout', [UserController::class, 'logout']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
+
+Route::post('/manage-avatar', [UserController::class, 'storeAvatar'])->middleware('auth');
