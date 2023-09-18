@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
@@ -24,8 +25,10 @@ class UserController extends Controller
 
         $incomingFields['password'] = bcrypt($incomingFields['password']);
 
-        User::create($incomingFields);
-        return 'Registration Completed';
+        $user = User::create($incomingFields);
+        auth()->login($user);
+
+        return redirect('/dashboard');
 
 
     }
@@ -45,7 +48,7 @@ class UserController extends Controller
         if (auth()->attempt(['email' => $incomingFields['email'], 'password' => $incomingFields['password']])) {
             $request->session()->regenerate();
             
-            return 'Congrats';
+            return redirect('/dashboard');
         } else {
             return 'Invalid';
         }
@@ -58,6 +61,12 @@ class UserController extends Controller
         } else {
             return view('login');
         }
+    }
+
+    public function logout(): RedirectResponse
+    {
+        auth()->logout();
+        return redirect('/login')->with('success', 'You are now signed out');
     }
 
 }

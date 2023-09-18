@@ -23,3 +23,5 @@ Route::get('/login', [UserController::class, 'login']);
 Route::post('/signin', [UserController::class, 'signin']);
 
 Route::get('/dashboard', [UserController::class, 'dashboard']);
+
+Route::post('/logout', [UserController::class, 'logout']);

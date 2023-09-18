@@ -1,6 +1,13 @@
 <x-layout>
     
     <div class="container">
+        @if (session()->has('success'))
+
+            <p class="alert alert-success text-center">
+                {{ session('success') }}
+            </p>
+            
+        @endif
         <form action="/signin" method="POST">
             @csrf
             <div class="form-group">
