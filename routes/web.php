@@ -18,10 +18,10 @@ Route::get('/', [UserController::class, 'index']);
 
 Route::post('/register', [UserController::class, 'register']);
 
-Route::get('/login', [UserController::class, 'login']);
+Route::get('/login', [UserController::class, 'login'])->name('login');
 
 Route::post('/signin', [UserController::class, 'signin']);
 
-Route::get('/dashboard', [UserController::class, 'dashboard']);
+Route::get('/dashboard', [UserController::class, 'dashboard'])->middleware('auth');
 
 Route::post('/logout', [UserController::class, 'logout']);
