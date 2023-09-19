@@ -49,7 +49,7 @@
                         
                   <tr>
                     <th scope="row">{{ $serialNumber }}</th>
-                    <td>{{ $doc->path }}</td>
+                    <td><img src="{{ asset('storage/' . $doc->path) }}" alt=""></td>
                     <td>{{ $doc->status }}</td>
                     <td>@mdo</td>
                   </tr>
